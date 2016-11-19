@@ -1,0 +1,65 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\t'
+
+function gtk_find_icon() {
+	python -c "import gtk; print gtk.icon_theme_get_default().lookup_icon(\"$1\",$2,0).get_filename()"
+}
+
+INFILE="$1"
+OUTFILE="$2"
+SIZE="$3"
+
+case $(echo $SIZE | cut -d x -f 1 ) in
+  256)	ICON_SIZE=128;;
+  192)	ICON_SIZE=96;;
+  128)	ICON_SIZE=64;;
+   96)	ICON_SIZE=48;;
+   72)	ICON_SIZE=36;;
+   64)	ICON_SIZE=32;;
+   48)	ICON_SIZE=24;;
+    *)	ICON_SIZE=16;;
+esac
+
+MIMETYPE="inode-directory"
+ICON_FILE="$(gtk_find_icon $MIMETYPE $ICON_SIZE)"
+thumbnail_file=""
+
+if [ -f "${INFILE}/poster.png" ]; then
+	thumbnail_file="${INFILE}/poster.png"
+
+elif [ -f "${INFILE}/poster.jpg" ]; then
+	thumbnail_file="${INFILE}/poster.jpg"
+
+elif [ -f "${INFILE}/folder.jpg" ]; then
+	thumbnail_file="${INFILE}/folder.jpg"
+
+elif [ -f "${INFILE}/.folder.jpg" ]; then
+	thumbnail_file="${INFILE}/.folder.jpg"
+
+elif [ -f "${INFILE}/.directory" ]; then
+	if crudini --get "${INFILE}/.directory" "Desktop Entry" Icon >/dev/null; then
+		icon_file="$(crudini --get "${INFILE}/.directory" "Desktop Entry" Icon)"
+		if [ -f "${icon_file}" ]; then
+			thumbnail_file="${icon_file}"
+		elif [ -f "${INFILE}/${icon_file}" ]; then
+			thumbnail_file="${INFILE}/${icon_file}"
+		else
+			thumbnail_file="$(gtk_find_icon ${icon_file} ${SIZE})"
+			if [ "${thumbnail_file//*.}" == "svg" ]; then
+				rsvg-convert -w ${SIZE} -h ${SIZE} "${thumbnail_file}" >"${OUTFILE}"
+				thumbnail_file="${OUTFILE}"
+			fi
+		fi
+	fi
+fi
+
+if ! [ -z "$thumbnail_file" ]; then 
+	if [ -f "${thumbnail_file}" ]; then
+		convert "${thumbnail_file}" -resize "${SIZE}x${SIZE}" -background none -gravity center -extent "${SIZE}x${SIZE}" "${ICON_FILE}" -gravity SouthEast -composite "${OUTFILE}"
+	else
+		echo No usable image found!
+	fi
+else
+	echo No usable image found!
+fi

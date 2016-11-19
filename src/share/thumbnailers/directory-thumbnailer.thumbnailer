@@ -1,0 +1,4 @@
+[Thumbnailer Entry]
+TryExec=directory-thumbnailer
+Exec=directory-thumbnailer %i %o %s
+MimeType=inode/directory;
