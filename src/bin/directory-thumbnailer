@@ -34,8 +34,20 @@ elif [ -f "${INFILE}/poster.jpg" ]; then
 elif [ -f "${INFILE}/folder.jpg" ]; then
 	thumbnail_file="${INFILE}/folder.jpg"
 
+elif [ -f "${INFILE}/folder.png" ]; then
+	thumbnail_file="${INFILE}/folder.png"
+
 elif [ -f "${INFILE}/.folder.jpg" ]; then
 	thumbnail_file="${INFILE}/.folder.jpg"
+
+elif [ -f "${INFILE}/.folder.png" ]; then
+	thumbnail_file="${INFILE}/.folder.png"
+
+elif [ -f "${INFILE}/Folder.jpg" ]; then
+	thumbnail_file="${INFILE}/Folder.jpg"
+
+elif [ -f "${INFILE}/AlbumArtSmall.jpg" ]; then
+	thumbnail_file="${INFILE}/AlbumArtSmall.jpg"
 
 elif [ -f "${INFILE}/.directory" ]; then
 	if crudini --get "${INFILE}/.directory" "Desktop Entry" Icon >/dev/null; then
