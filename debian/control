@@ -3,6 +3,6 @@ Architecture: all
 Maintainer: Livanh <livanh@bulletmail.org>
 Depends: imagemagick, librsvg2-bin
 Priority: optional
-Version: 0.1
+Version: 0.2
 Description: Thumbnailer for directories
  This program generates thumbnails for directories, using pre-defined file names (e.g. folder.{png,jpg}, poster.{png,jpg}) or information from .directory files.
