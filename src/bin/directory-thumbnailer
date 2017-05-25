@@ -13,31 +13,35 @@ OUTFILE="$2"
 SIZE="$3"
 thumbnail_file=""
 
-if [ -f "${INFILE}/poster.png" ]; then
-    thumbnail_file="${INFILE}/poster.png"
+if [ "${thumbnail_file}" == "" ]; then
+    thumbnail_file="$(find ${INFILE} -maxdepth 1 -iname poster.jpg)"
+fi
 
-elif [ -f "${INFILE}/poster.jpg" ]; then
-    thumbnail_file="${INFILE}/poster.jpg"
+if [ "${thumbnail_file}" == "" ]; then
+    thumbnail_file="$(find ${INFILE} -maxdepth 1 -iname poster.png)"
+fi
 
-elif [ -f "${INFILE}/folder.jpg" ]; then
-    thumbnail_file="${INFILE}/folder.jpg"
+if [ "${thumbnail_file}" == "" ]; then
+    thumbnail_file="$(find ${INFILE} -maxdepth 1 -iname folder.jpg)"
+fi
 
-elif [ -f "${INFILE}/folder.png" ]; then
-    thumbnail_file="${INFILE}/folder.png"
+if [ "${thumbnail_file}" == "" ]; then
+    thumbnail_file="$(find ${INFILE} -maxdepth 1 -iname .folder.jpg)"
+fi
 
-elif [ -f "${INFILE}/.folder.jpg" ]; then
-    thumbnail_file="${INFILE}/.folder.jpg"
+if [ "${thumbnail_file}" == "" ]; then
+    thumbnail_file="$(find ${INFILE} -maxdepth 1 -iname folder.png)"
+fi
 
-elif [ -f "${INFILE}/.folder.png" ]; then
-    thumbnail_file="${INFILE}/.folder.png"
+if [ "${thumbnail_file}" == "" ]; then
+    thumbnail_file="$(find ${INFILE} -maxdepth 1 -iname .folder.png)"
+fi
 
-elif [ -f "${INFILE}/Folder.jpg" ]; then
-    thumbnail_file="${INFILE}/Folder.jpg"
+if [ "${thumbnail_file}" == "" ]; then
+    thumbnail_file="$(find ${INFILE} -maxdepth 1 -iname AlbumArtSmall.jpg)"
+fi
 
-elif [ -f "${INFILE}/AlbumArtSmall.jpg" ]; then
-    thumbnail_file="${INFILE}/AlbumArtSmall.jpg"
-
-elif [ -f "${INFILE}/.directory" ]; then
+if [ "${thumbnail_file}" == "" ] && [ -f "${INFILE}/.directory" ]; then 
     if crudini --get "${INFILE}/.directory" "Desktop Entry" Icon >/dev/null; then
         icon_file="$(crudini --get "${INFILE}/.directory" "Desktop Entry" Icon)"
         if [ -f "${icon_file}" ]; then
