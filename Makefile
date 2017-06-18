@@ -1,7 +1,7 @@
 PREFIX=/usr/local
 
 PACKAGE_NAME=directory-thumbnailer
-PACKAGE_VERSION=0.2.1
+PACKAGE_VERSION=0.2.2
 
 install:
 	install -m 755 src/bin/directory-thumbnailer $(PREFIX)/bin

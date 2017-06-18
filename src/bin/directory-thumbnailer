@@ -2,10 +2,6 @@
 set -euo pipefail
 IFS=$'\n\t'
 
-function gtk_find_icon() {
-    python -c "import gtk; print gtk.icon_theme_get_default().lookup_icon(\"$1\",$2,0).get_filename()"
-}
-
 if [ -z "$1" ]; then exit 0; fi
 
 INFILE="$1"
@@ -39,23 +35,6 @@ fi
 
 if [ "${thumbnail_file}" == "" ]; then
     thumbnail_file="$(find ${INFILE} -maxdepth 1 -iname AlbumArtSmall.jpg)"
-fi
-
-if [ "${thumbnail_file}" == "" ] && [ -f "${INFILE}/.directory" ]; then 
-    if crudini --get "${INFILE}/.directory" "Desktop Entry" Icon >/dev/null; then
-        icon_file="$(crudini --get "${INFILE}/.directory" "Desktop Entry" Icon)"
-        if [ -f "${icon_file}" ]; then
-            thumbnail_file="${icon_file}"
-        elif [ -f "${INFILE}/${icon_file}" ]; then
-            thumbnail_file="${INFILE}/${icon_file}"
-        else
-            thumbnail_file="$(gtk_find_icon ${icon_file} ${SIZE})"
-            if [ "${thumbnail_file//*.}" == "svg" ]; then
-                rsvg-convert -w ${SIZE} -h ${SIZE} "${thumbnail_file}" >"${OUTFILE}"
-                thumbnail_file="${OUTFILE}"
-            fi
-        fi
-    fi
 fi
 
 if ! [ -z "$thumbnail_file" ]; then 
