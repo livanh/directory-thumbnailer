@@ -1,7 +1,7 @@
 Package: directory-thumbnailer
 Architecture: all
 Maintainer: Livanh <livanh@bulletmail.org>
-Depends: imagemagick
+Depends: imagemagick, librsvg2-bin
 Priority: optional
 Version: 0.2.2
 Description: Thumbnailer for directories

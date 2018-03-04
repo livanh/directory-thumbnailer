@@ -34,12 +34,24 @@ if [ "${thumbnail_file}" == "" ]; then
 fi
 
 if [ "${thumbnail_file}" == "" ]; then
+    thumbnail_file="$(find ${INFILE} -maxdepth 1 -iname folder.svg)"
+fi
+
+if [ "${thumbnail_file}" == "" ]; then
+    thumbnail_file="$(find ${INFILE} -maxdepth 1 -iname .folder.svg)"
+fi
+
+if [ "${thumbnail_file}" == "" ]; then
     thumbnail_file="$(find ${INFILE} -maxdepth 1 -iname AlbumArtSmall.jpg)"
 fi
 
 if ! [ -z "$thumbnail_file" ]; then 
     if [ -f "${thumbnail_file}" ]; then
-        convert "${thumbnail_file}" -resize "${SIZE}x${SIZE}" "${OUTFILE}"
+        if [ "${thumbnail_file##*.}" == ".svg" ]; then
+            rsvg-convert -o "${OUTFILE}" -w "${SIZE}" -h "${SIZE}" "${thumbnail_file}"
+        else
+            convert "${thumbnail_file}" -resize "${SIZE}x${SIZE}" "${OUTFILE}"
+        fi
     else
         echo No usable image found!
     fi
