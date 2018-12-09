@@ -2,6 +2,11 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+function gtk_find_icon() {
+    python -c "import gtk; print gtk.icon_theme_get_default().lookup_icon(\"$1\",$2,0).get_filename()"
+}
+
+
 if [ -z "$1" ]; then exit 0; fi
 
 INFILE="$1"
@@ -45,8 +50,15 @@ if [ "${thumbnail_file}" == "" ]; then
     thumbnail_file="$(find ${INFILE} -maxdepth 1 -iname AlbumArtSmall.jpg)"
 fi
 
-if ! [ -z "$thumbnail_file" ]; then 
+
+
+if ! [ -z "${thumbnail_file}" ]; then
+
     if [ -f "${thumbnail_file}" ]; then
+        if ! [ -s "${thumbnail_file}" ]; then
+            thumbnail_file="$(gtk_find_icon inode-directory ${SIZE})"
+        fi
+
         if [ "${thumbnail_file##*.}" == ".svg" ]; then
             rsvg-convert -o "${OUTFILE}" -w "${SIZE}" -h "${SIZE}" "${thumbnail_file}"
         else
