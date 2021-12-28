@@ -1,3 +1,9 @@
+directory-thumbnailer (0.2.5-1) testing; urgency=medium
+
+  * Upstream version 0.2.5
+
+ -- Livanh <livanh@protonmail.com>  Wed, 28 Dec 2021 12:55:31 +0100
+
 directory-thumbnailer (0.2.4-1) testing; urgency=medium
 
   * Upstream version 0.2.4
